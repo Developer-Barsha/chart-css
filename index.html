@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chart Css Task</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/4c86bf831a.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <header>
+        <p id="time"></p>
+
+        <div class="icons">
+            <i class="fa-solid fa-chart-simple"></i>
+            <i class="fa-solid fa-wifi"></i>
+            <i class="fa-solid fa-battery-full"></i>
+        </div>
+    </header>
+    <main>
+        <div class="top-part">
+            <h2 class="title">Transactions Overview</h2>
+
+            <div id="options">
+                <select id="choose">
+                    <option value="Day">Day</option>
+                    <option value="Week">Week</option>
+                    <option value="Month">Month</option>
+                </select>
+            </div>
+        </div>
+
+        <canvas id="dayChart" style="width:100%;max-width:700px;margin:20px auto"></canvas>
+        <canvas id="weekChart" style="width:100%;max-width:700px;margin:20px auto"></canvas>
+        <canvas id="monthChart" style="width:100%;max-width:700px;margin:20px auto"></canvas>
+
+        <h3>S.T.A - Total Successfull Transaction Amount</h3>
+        <h3>S.T - Total Successfull Transaction</h3>
+        <h3>A - Total Attemps</h3>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        window.onload = setInterval(function () {
+            let today = new Date();
+            let hour = today.getHours();
+            let min = today.getMinutes();
+            am_pm = "AM";
+
+            if (hour > 12) {
+                hour -= 12;
+                am_pm = "PM";
+            }
+            if (hour == 0) {
+                hour = 12;
+                am_pm = "AM";
+            }
+
+            hour = hour < 10 ? "0" + hour : hour;
+            min = min < 10 ? "0" + min : min;
+
+            let currentTime = hour + ":" + min + " " + am_pm;
+
+            document.getElementById("time").innerHTML = currentTime;
+        }, 1000);
+
+
+
+        const select = document.getElementById('choose');
+        const dayChartDiv = document.getElementById('dayChart');
+        const weekChartDiv = document.getElementById('weekChart');
+        const monthChartDiv = document.getElementById('monthChart');
+        let selected = 'Day';
+
+        // default styles
+        weekChartDiv.style.display = 'none';
+        monthChartDiv.style.display = 'none';
+
+        select.addEventListener('change', () => {
+            selected = select?.value;
+            if (selected === 'Day') {
+                dayChartDiv.style.display = 'block';
+                weekChartDiv.style.display = 'none';
+                monthChartDiv.style.display = 'none';
+            }
+            else if (selected === 'Week') {
+                weekChartDiv.style.display = 'block';
+                monthChartDiv.style.display = 'none';
+                dayChartDiv.style.display = 'none';
+            }
+            else if (selected === 'Month') {
+                monthChartDiv.style.display = 'block';
+                dayChartDiv.style.display = 'none';
+                weekChartDiv.style.display = 'none';
+            }
+        })
+
+        const dayData = {
+            labels: ['April 1', 'April 2', 'April 3', 'April 4', 'April 5', 'April 6', 'April 7', 'April 8', 'April 9'],
+            datasets: [{
+                backgroundColor: '#9392dd',
+                borderColor: '#504DE5',
+                data: [0, 10, 28, 30, 5, 30, 20, 15, 41],
+                tension: 0.4,
+                pointRadius: 0,
+                pointHoverRadius: 6,
+                pointHoverBorderWidth: 3,
+                pointHoverBorderColor: '#fff',
+            }]
+        };
+
+        const weekData = {
+            labels: ['April 1-7', 'April 8-14', 'April 15-21', 'April 22-28', 'April 29'],
+            datasets: [{
+                backgroundColor: '#4de5dd',
+                borderColor: '#504DE5',
+                data: [30, 5, 30, 20, 15],
+                tension: 0.4,
+                pointRadius: 0,
+                pointHoverRadius: 6,
+                pointHoverBorderWidth: 3,
+                pointHoverBorderColor: '#fff',
+            }]
+        };
+
+        const monthData = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                backgroundColor: '#e5b04d',
+                borderColor: '#504DE5',
+                data: [12, 22, 25, 36, 16, 30, 40, 21,14,32,26,30],
+                tension: 0.4,
+                pointRadius: 0,
+                pointHoverRadius: 6,
+                pointHoverBorderWidth: 3,
+                pointHoverBorderColor: '#fff',
+            }]
+        };
+
+        const dayConfig = {
+            type: 'line',
+            data: dayData,
+            options: {
+                scales: {
+                    y: {
+                        ticks: { display: false },
+                        grid: {
+                            display: false,
+                            drawTicks: false,
+                            drawOnChartArea: false
+                        },
+                        max: 60
+                    },
+                    x: {
+                        ticks: { display: true, color: '#504DE5' },
+
+                    }
+                },
+
+                plugins: {
+                    legend: {
+                        display: false,
+                        labels: {
+                            color: 'rgb(255, 99, 132)'
+                        },
+                    },
+                    tooltip: {
+                        backgroundColor: '#F3F3FA',
+                        titleColor: '#000',
+                        bodyColor: '#000',
+                    }
+                },
+            }
+        };
+
+        const weekConfig = {
+            type: 'line',
+            data: weekData,
+            options: {
+                scales: {
+                    y: {
+                        ticks: { display: false },
+                        grid: {
+                            display: false,
+                            drawTicks: false,
+                            drawOnChartArea: false
+                        },
+                        max: 60
+                    },
+                    x: {
+                        ticks: { display: true, color: '#504DE5' },
+
+                    }
+                },
+
+                plugins: {
+                    legend: {
+                        display: false,
+                        labels: {
+                            color: 'rgb(255, 99, 132)'
+                        },
+                    },
+                    tooltip: {
+                        backgroundColor: '#F3F3FA',
+                        titleColor: '#000',
+                        bodyColor: '#000',
+                    }
+                },
+            }
+        };
+
+        const monthConfig = {
+            type: 'line',
+            data: monthData,
+            options: {
+                scales: {
+                    y: {
+                        ticks: { display: false },
+                        grid: {
+                            display: false,
+                            drawTicks: false,
+                            drawOnChartArea: false
+                        },
+                        max: 60
+                    },
+                    x: {
+                        ticks: { display: true, color: '#504DE5' },
+
+                    }
+                },
+
+                plugins: {
+                    legend: {
+                        display: false,
+                        labels: {
+                            color: 'rgb(255, 99, 132)'
+                        },
+                    },
+                    tooltip: {
+                        backgroundColor: '#F3F3FA',
+                        titleColor: '#000',
+                        bodyColor: '#000',
+                    }
+                },
+            }
+        };
+
+        const dayChart = new Chart(
+            document.getElementById('dayChart'),
+            dayConfig
+        );
+
+        const weekChart = new Chart(
+            document.getElementById('weekChart'),
+            weekConfig
+        );
+
+        const monthChart = new Chart(
+            document.getElementById('monthChart'),
+            monthConfig
+        );
+    </script>
+</body>
+
+</html>
